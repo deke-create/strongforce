@@ -13,5 +13,8 @@ namespace StrongForce.Core
 
 		Address CreateContract<T>(IDictionary<string, object> payload)
 			where T : BaseContract, new();
+
+		T GetContract<T>(Address address)
+			where T : BaseContract;
 	}
 }

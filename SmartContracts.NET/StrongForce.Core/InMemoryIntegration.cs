@@ -115,6 +115,12 @@ namespace StrongForce.Core
 			{
 				throw new NotSupportedException();
 			}
+
+			public T GetContract<T>(Address address)
+				where T : BaseContract
+			{
+				throw new NotImplementedException();
+			}
 		}
 
 		public class ProxyAddressFactory : BaseAddressFactory

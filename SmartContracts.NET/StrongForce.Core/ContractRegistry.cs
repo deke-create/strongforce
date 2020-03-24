@@ -225,6 +225,13 @@ namespace StrongForce.Core
 			{
 				return this.registry.CreateContract<T>(payload);
 			}
+
+			public T GetContract<T>(Address address)
+				where T : BaseContract
+			{
+				var (res, _) = this.registry.GetContract(address);
+				return res as T;
+			}
 		}
 	}
 }
