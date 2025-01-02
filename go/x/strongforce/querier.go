@@ -12,7 +12,7 @@ import (
 
 // NewQuerier returns a querier for strongforce
 func NewQuerier(keeper Keeper) sdk.Querier {
-	return func(ctx sdk.Context, path []string, req abci.RequestQuery) ([]byte, sdk.Error) {
+	return func(ctx sdk.Context, path []string, req abci.RequestQuery) ([]byte, error) {
 		switch path[1] {
 		case "state":
 			{
@@ -21,7 +21,7 @@ func NewQuerier(keeper Keeper) sdk.Querier {
 				for _, element := range addresses {
 					id, err := base64.RawURLEncoding.DecodeString(element)
 					if err != nil {
-						return nil, sdk.ErrInvalidAddress("cannot parse strongforce contract address")
+						return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, "cannot parse strongforce contract address")
 					}
 					state := keeper.GetState(ctx, id)
 					stateMap[element] = state
@@ -29,7 +29,7 @@ func NewQuerier(keeper Keeper) sdk.Querier {
 				result, err := codec.MarshalJSONIndent(keeper.cdc, stateMap)
 
 				if err != nil {
-					return nil, sdk.ErrInternal("could not convert address list to json")
+					return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "could not convert address list to json")
 				}
 
 				return result, nil
@@ -45,7 +45,7 @@ func NewQuerier(keeper Keeper) sdk.Querier {
 
 				result, err := codec.MarshalJSONIndent(keeper.cdc, addresses)
 				if err != nil {
-					return nil, sdk.ErrInternal("could not convert address list to json")
+					return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "could not convert address list to json")
 				}
 
 				return result, nil
@@ -64,7 +64,7 @@ func NewQuerier(keeper Keeper) sdk.Querier {
 
 				result, err := codec.MarshalJSONIndent(keeper.cdc, addresses)
 				if err != nil {
-					return nil, sdk.ErrInternal("could not convert address list to json")
+					return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "could not convert address list to json")
 				}
 
 				return result, nil
@@ -77,14 +77,14 @@ func NewQuerier(keeper Keeper) sdk.Querier {
 				keeper.cdc.MustUnmarshalJSON(decodedStr, &stdTx)
 				txBytes, err := keeper.cdc.MarshalBinaryLengthPrefixed(stdTx)
 				if err != nil {
-					return nil, sdk.ErrInternal("could not encode Action to amino")
+					return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "could not encode Action to amino")
 				}
 				//encoded := []byte(base64.StdEncoding.EncodeToString(txBytes))
 				return txBytes, nil
 			}
-			// return nil, sdk.ErrUnknownRequest("invalid parameters for strongforce/contract endpoint")
+			// return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "invalid parameters for strongforce/contract endpoint")
 		default:
-			return nil, sdk.ErrUnknownRequest("unknown strongforce query endpoint")
+			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, "unknown strongforce query endpoint")
 		}
 	}
 }

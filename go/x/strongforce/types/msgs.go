@@ -3,47 +3,48 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // MsgExecuteAction represents a request to execute an action
 type MsgExecuteAction struct {
-	Doer   types.AccAddress
+	Doer   sdk.AccAddress
 	Action []byte
 }
 
 // NewMsgExecuteAction is the constructor for MsgExecuteAction
-func NewMsgExecuteAction(doer types.AccAddress, action []byte) MsgExecuteAction {
+func NewMsgExecuteAction(doer sdk.AccAddress, action []byte) MsgExecuteAction {
 	return MsgExecuteAction{
 		Doer:   doer,
 		Action: action,
 	}
 }
 
-// Route - Implements types.Message
-func (msg MsgExecuteAction) Route() string { return "strongforce" }
+// Route - Implements sdk.Msg
+func (msg MsgExecuteAction) Route() string { return RouterKey }
 
-// Type - Implements types.Message
+// Type - Implements sdk.Msg
 func (msg MsgExecuteAction) Type() string { return "execute_action" }
 
-// ValidateBasic  - Implements types.Message
-func (msg MsgExecuteAction) ValidateBasic() types.Error {
+// ValidateBasic  - Implements sdk.Msg
+func (msg MsgExecuteAction) ValidateBasic() error {
 	if msg.Doer.Empty() {
-		return types.ErrInvalidAddress(msg.Doer.String())
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidAddress, msg.Doer.String())
 	}
 	return nil
 }
 
-// GetSignBytes  - Implements types.Message
+// GetSignBytes  - Implements sdk.Msg
 func (msg MsgExecuteAction) GetSignBytes() []byte {
 	b, err := json.Marshal(msg)
 	if err != nil {
 		panic(err)
 	}
-	return types.MustSortJSON(b)
+	return sdk.MustSortJSON(b)
 }
 
-// GetSigners  - Implements types.Message
-func (msg MsgExecuteAction) GetSigners() []types.AccAddress {
-	return []types.AccAddress{msg.Doer}
+// GetSigners  - Implements sdk.Msg
+func (msg MsgExecuteAction) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.Doer}
 }

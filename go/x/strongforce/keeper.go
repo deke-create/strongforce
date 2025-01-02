@@ -2,18 +2,19 @@ package strongforce
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	store "github.com/cosmos/cosmos-sdk/store/types"
 )
 
 // Keeper is the keeper for strongforce
 type Keeper struct {
 	cdc          *codec.Codec
-	storeKey     types.StoreKey
-	typeStoreKey types.StoreKey
+	storeKey     store.StoreKey
+	typeStoreKey store.StoreKey
 }
 
 // NewKeeper creates a new keeper for strongforce
-func NewKeeper(cdc *codec.Codec, storeKey types.StoreKey, typeStoreKey types.StoreKey) Keeper {
+func NewKeeper(cdc *codec.Codec, storeKey store.StoreKey, typeStoreKey store.StoreKey) Keeper {
 	return Keeper{
 		cdc:          cdc,
 		storeKey:     storeKey,
@@ -22,7 +23,7 @@ func NewKeeper(cdc *codec.Codec, storeKey types.StoreKey, typeStoreKey types.Sto
 }
 
 // SetState sets the state of a contract
-func (k Keeper) SetState(ctx types.Context, id []byte, data []byte, typeName []byte) {
+func (k Keeper) SetState(ctx sdk.Context, id []byte, data []byte, typeName []byte) {
 
 	store := ctx.KVStore(k.storeKey)
 
@@ -34,42 +35,42 @@ func (k Keeper) SetState(ctx types.Context, id []byte, data []byte, typeName []b
 }
 
 // GetState sets the state of a contract
-func (k Keeper) GetState(ctx types.Context, id []byte) []byte {
+func (k Keeper) GetState(ctx sdk.Context, id []byte) []byte {
 	store := ctx.KVStore(k.storeKey)
 	return store.Get(id)
 }
 
 // GetState sets the state of a contract
-func (k Keeper) GetType(ctx types.Context, id []byte) []byte {
+func (k Keeper) GetType(ctx sdk.Context, id []byte) []byte {
 	store := ctx.KVStore(k.typeStoreKey)
 	return store.Get(id)
 }
 
 // GetContractsIterator returns an iterator over all stored contracts
-func (k Keeper) GetContractsStateIterator(ctx types.Context) types.Iterator {
+func (k Keeper) GetContractsStateIterator(ctx sdk.Context) sdk.Iterator {
 	store := ctx.KVStore(k.storeKey)
-	return types.KVStorePrefixIterator(store, []byte{})
+	return sdk.KVStorePrefixIterator(store, []byte{})
 }
 
-func (k Keeper) GetContractsTypeIterator(ctx types.Context) types.Iterator {
+func (k Keeper) GetContractsTypeIterator(ctx sdk.Context) sdk.Iterator {
 	store := ctx.KVStore(k.typeStoreKey)
-	return types.KVStorePrefixIterator(store, []byte{})
+	return sdk.KVStorePrefixIterator(store, []byte{})
 }
 
 // // DelegateCoins implements github.com/cosmos/cosmos-sdk/blob/master/x/staking/types BankKeeper
-// func (k Keeper) DelegateCoins(ctx types.Context, addr types.AccAddress, amt types.Coins) (types.Tags, types.Error) {
-// 	// return nil, types.ErrInternal("Unimplemented")
-// 	return types.EmptyTags(), nil
+// func (k Keeper) DelegateCoins(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coins) (sdk.Tags, sdk.Error) {
+// 	// return nil, sdk.ErrInternal("Unimplemented")
+// 	return sdk.EmptyTags(), nil
 // }
 
 // // UndelegateCoins implements github.com/cosmos/cosmos-types/blob/master/x/staking/types BankKeeper
-// func (k Keeper) UndelegateCoins(ctx types.Context, addr types.AccAddress, amt types.Coins) (types.Tags, types.Error) {
-// 	// return nil, types.ErrInternal("Unimplemented")
-// 	return types.EmptyTags(), nil
+// func (k Keeper) UndelegateCoins(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coins) (sdk.Tags, sdk.Error) {
+// 	// return nil, sdk.ErrInternal("Unimplemented")
+// 	return sdk.EmptyTags(), nil
 // }
 
 // AddCoins implements github.com/cosmos/cosmos-types/blob/master/x/distribution/types BankKeeper
-func (k Keeper) AddCoins(ctx types.Context, addr types.AccAddress, amt types.Coins) (types.Coins, types.Error) {
-	// return nil, types.ErrInternal("Unimplemented")
-	return types.NewCoins(), nil
+func (k Keeper) AddCoins(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coins) (sdk.Coins, sdk.Error) {
+	// return nil, sdk.ErrInternal("Unimplemented")
+	return sdk.NewCoins(), nil
 }

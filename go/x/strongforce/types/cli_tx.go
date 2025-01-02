@@ -4,12 +4,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/codec"
 
-	"github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/auth"
-	"github.com/cosmos/cosmos-sdk/x/auth/client/utils"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // GetTxCmd generates the entrypoint for the strongforce module
@@ -35,10 +34,9 @@ func GetCmdExecuteAction(cdc *codec.Codec) *cobra.Command {
 		Short: "execute an action",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cliCtx := context.NewCLIContext().WithCodec(cdc)
-			//.WithAccountDecoder(cdc)
+			cliCtx := client.GetClientContextFromCmd(cmd).WithCodec(cdc)
 
-			txBldr := auth.NewTxBuilderFromCLI().WithTxEncoder(utils.GetTxEncoder(cdc))
+			txBldr := tx.NewFactoryCLI(cliCtx, cmd.Flags())
 
 			msg := NewMsgExecuteAction(cliCtx.GetFromAddress(), []byte(args[0]))
 			err := msg.ValidateBasic()
@@ -46,7 +44,7 @@ func GetCmdExecuteAction(cdc *codec.Codec) *cobra.Command {
 				return err
 			}
 
-			return utils.GenerateOrBroadcastMsgs(cliCtx, txBldr, []types.Msg{msg})
+			return tx.GenerateOrBroadcastTxCLI(cliCtx, cmd.Flags(), []sdk.Msg{msg})
 		},
 	}
 }

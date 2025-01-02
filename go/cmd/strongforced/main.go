@@ -7,11 +7,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/libs/cli"
-	"github.com/tendermint/tendermint/libs/log"
-	tendermintTypes "github.com/tendermint/tendermint/types"
-	db "github.com/tendermint/tm-db"
+	abci "github.com/cometbft/cometbft/abci/types"
+	"github.com/cometbft/cometbft/libs/cli"
+	"github.com/cometbft/cometbft/libs/log"
+	tendermintTypes "github.com/cometbft/cometbft/types"
+	db "github.com/cometbft/cometbft-db"
 
 	app "github.com/comrade-coop/strongforce/go"
 	"github.com/cosmos/cosmos-sdk/server"

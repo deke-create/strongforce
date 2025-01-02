@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/comrade-coop/strongforce/go/cmd/rest"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client/v2/context"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"

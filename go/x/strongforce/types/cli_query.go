@@ -8,7 +8,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/codec"
 )
 
@@ -37,7 +38,7 @@ func GetCmdGetState(queryRoute string, cdc *codec.Codec) *cobra.Command {
 		Short: "get the state of a contract at the address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			cliCtx := client.GetClientContextFromCmd(cmd).WithCodec(cdc)
 			address := args[0]
 
 			res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/contract/state/%s", queryRoute, address), nil)
@@ -66,7 +67,7 @@ func GetCmdAddresses(queryRoute string, cdc *codec.Codec) *cobra.Command {
 		Short: "list the addresses of all contracts present",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			cliCtx := client.GetClientContextFromCmd(cmd).WithCodec(cdc)
 
 			res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/contract/addresses", queryRoute), nil)
 			if err != nil {
@@ -87,7 +88,7 @@ func GetCmdAddressesForType(queryRoute string, cdc *codec.Codec) *cobra.Command 
 		Short: "list the addresses of contract type",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			cliCtx := client.GetClientContextFromCmd(cmd).WithCodec(cdc)
 			typeName := args[0]
 
 			res, _, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/contract/type/%s", queryRoute, typeName), nil)
