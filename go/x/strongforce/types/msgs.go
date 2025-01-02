@@ -9,8 +9,8 @@ import (
 
 // MsgExecuteAction represents a request to execute an action
 type MsgExecuteAction struct {
-	Doer   sdk.AccAddress
-	Action []byte
+	Doer   sdk.AccAddress `json:"doer" yaml:"doer"`
+	Action []byte         `json:"action" yaml:"action"`
 }
 
 // NewMsgExecuteAction is the constructor for MsgExecuteAction

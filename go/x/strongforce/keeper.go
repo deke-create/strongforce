@@ -8,13 +8,13 @@ import (
 
 // Keeper is the keeper for strongforce
 type Keeper struct {
-	cdc          *codec.Codec
+	cdc          codec.Codec
 	storeKey     store.StoreKey
 	typeStoreKey store.StoreKey
 }
 
 // NewKeeper creates a new keeper for strongforce
-func NewKeeper(cdc *codec.Codec, storeKey store.StoreKey, typeStoreKey store.StoreKey) Keeper {
+func NewKeeper(cdc codec.Codec, storeKey store.StoreKey, typeStoreKey store.StoreKey) Keeper {
 	return Keeper{
 		cdc:          cdc,
 		storeKey:     storeKey,
@@ -70,7 +70,7 @@ func (k Keeper) GetContractsTypeIterator(ctx sdk.Context) sdk.Iterator {
 // }
 
 // AddCoins implements github.com/cosmos/cosmos-types/blob/master/x/distribution/types BankKeeper
-func (k Keeper) AddCoins(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coins) (sdk.Coins, sdk.Error) {
+func (k Keeper) AddCoins(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coins) (sdk.Coins, error) {
 	// return nil, sdk.ErrInternal("Unimplemented")
 	return sdk.NewCoins(), nil
 }

@@ -7,16 +7,15 @@ import (
 
 	"github.com/spf13/cobra"
 
-	abci "github.com/cometbft/cometbft/abci/types"
-	"github.com/cometbft/cometbft/libs/cli"
-	"github.com/cometbft/cometbft/libs/log"
-	tendermintTypes "github.com/cometbft/cometbft/types"
-	db "github.com/cometbft/cometbft-db"
+	abci "github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/libs/cli"
+	"github.com/tendermint/tendermint/libs/log"
+	tendermintTypes "github.com/tendermint/tendermint/types"
+	db "github.com/tendermint/tm-db"
 
 	app "github.com/comrade-coop/strongforce/go"
 	"github.com/cosmos/cosmos-sdk/server"
-	"github.com/cosmos/cosmos-sdk/x/genaccounts"
-	genaccountscli "github.com/cosmos/cosmos-sdk/x/genaccounts/client/cli"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 )
@@ -42,11 +41,11 @@ func main() {
 
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(ctx, cdc, app.ModuleBasicManager, app.DefaultNodeHome),
-		genutilcli.CollectGenTxsCmd(ctx, cdc, genaccounts.AppModuleBasic{}, app.DefaultNodeHome),
-		genutilcli.GenTxCmd(ctx, cdc, app.ModuleBasicManager, staking.AppModuleBasic{}, genaccounts.AppModuleBasic{}, app.DefaultNodeHome, app.DefaultCLIHome),
+		genutilcli.CollectGenTxsCmd(ctx, cdc, genutil.AppModuleBasic{}, app.DefaultNodeHome),
+		genutilcli.GenTxCmd(ctx, cdc, app.ModuleBasicManager, staking.AppModuleBasic{}, genutil.AppModuleBasic{}, app.DefaultNodeHome, app.DefaultCLIHome),
 		genutilcli.ValidateGenesisCmd(ctx, cdc, app.ModuleBasicManager),
 		// AddGenesisAccountCmd allows users to add accounts to the genesis file
-		genaccountscli.AddGenesisAccountCmd(ctx, cdc, app.DefaultNodeHome, app.DefaultCLIHome),
+		genutilcli.AddGenesisAccountCmd(ctx, cdc, app.DefaultNodeHome, app.DefaultCLIHome),
 	)
 	server.AddCommands(ctx, cdc, rootCmd, newApp, exportAppStateAndValidators)
 
